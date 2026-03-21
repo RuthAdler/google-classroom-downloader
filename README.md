@@ -1,6 +1,6 @@
 # 📥 google-classroom-downloader
 
-A Python script that backs up all your Google Classroom materials to Google Drive — organized by course and topic, exactly like your classroom structure.
+A Python script that backs up all your Google Classroom materials to Google Drive - organized by course and topic, exactly like your classroom structure.
 
 Built for students whose courses are losing access and want to keep their materials.
 
@@ -12,7 +12,7 @@ Built for students whose courses are losing access and want to keep their materi
 - Mirrors the topic/unit folder structure into your Google Drive
 - Copies PDFs, Google Docs, Slides, and Sheets directly to Drive
 - Saves YouTube links, external links, and forms into a `_links.md` file per topic
-- Skips courses you don't want via a simple filter list
+- Skips courses you don't want via a `--filter` flag
 
 ### Output structure in Drive
 
@@ -71,29 +71,37 @@ pip3 install -r requirements.txt
 ## ▶️ Usage
 
 ```bash
+# Download all active courses
 python3 classroom_downloader.py
-```
 
-On first run, a browser window opens asking you to log in and grant access. After that, it runs automatically.
+# Download only specific courses (partial match, case-insensitive)
+python3 classroom_downloader.py --filter "Machine Learning" "Deep Learning"
+
+# Change the output folder name in Drive
+python3 classroom_downloader.py --output "My Backup"
+
+# Include archived courses as well
+python3 classroom_downloader.py --archived
+
+# Preview what would be downloaded without touching Drive
+python3 classroom_downloader.py --dry-run
+
+# Use a credentials file from a different path
+python3 classroom_downloader.py --credentials path/to/credentials.json
+```
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ CLI Options
 
-Open `classroom_downloader.py` and edit the config section at the top:
-
-```python
-# Name of the root folder created in your Google Drive
-DRIVE_ROOT_FOLDER_NAME = "Classroom Backup"
-
-# Filter to specific courses (case-insensitive, partial match)
-# Leave as [] to download ALL active courses
-COURSE_FILTER = []
-
-# Examples:
-# COURSE_FILTER = ["Machine Learning", "Deep Learning"]
-# COURSE_FILTER = ["Python"]  # matches any course with "Python" in the name
-```
+| Flag | Short | Default | Description |
+|---|---|---|---|
+| `--output` | `-o` | `"Classroom Backup"` | Root folder name to create in Google Drive |
+| `--filter` | `-f` | _(all courses)_ | Only download courses matching these keywords |
+| `--credentials` | `-c` | `credentials.json` | Path to your Google OAuth credentials file |
+| `--token` | `-t` | `token.pickle` | Path to the cached login token file |
+| `--archived` | | _(off)_ | Also include archived courses |
+| `--dry-run` | | _(off)_ | Preview without downloading anything |
 
 ---
 
@@ -115,7 +123,7 @@ COURSE_FILTER = []
 | Problem | Fix |
 |---|---|
 | `command not found: pip` | Use `pip3` instead |
-| `credentials.json not found` | Make sure the file is in the same folder as the script |
+| `credentials.json not found` | Make sure the file is in the same folder as the script, or use `--credentials path/to/file.json` |
 | "Access blocked" in browser | Add your email as a Test User (Setup step 4) |
 | Folders created but empty | Make sure materials are attached to posts in Classroom, not just typed text |
 | Scope warning in terminal | Already handled — the script sets `OAUTHLIB_RELAX_TOKEN_SCOPE=1` |
@@ -143,9 +151,9 @@ PRs welcome! Some ideas for improvements:
 
 - [ ] Support for downloading Zoom recording links
 - [ ] Progress bar with `tqdm`
-- [ ] CLI arguments for course filter and output folder
-- [ ] Support for archived (not just active) courses
-- [ ] Dry-run mode to preview what would be downloaded
+- [ ] Support for archived (not just active) courses ✅ done via `--archived`
+- [ ] Dry-run mode to preview what would be downloaded ✅ done via `--dry-run`
+- [ ] CLI arguments for course filter and output folder ✅ done
 
 ---
 
